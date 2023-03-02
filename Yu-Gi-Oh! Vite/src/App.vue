@@ -10,7 +10,8 @@ export default {
       requestName: '',
       cardsArray: [],
       page: 0,
-      name: ''
+      name: '',
+      searchProxy: {}
     }
   },
   components: {
@@ -18,15 +19,18 @@ export default {
     searchBar,
   },
   methods: {
-    handleCustomChange (s) {
-          this.requestName = s
+    handleCustomChange (newResearch) {
+          console.log(newResearch)
+          this.searchProxy = newResearch
           this.search()
         },
     search() {
       this.cardsArray = []
-      console.log(this.requestName)
-      let url = 'https://db.ygoprodeck.com/api/v7/cardinfo.php?&language=it&fname='+ this.requestName +'&num=15&offset=' + this.page
-      console.log(url)
+      let url = 'https://db.ygoprodeck.com/api/v7/cardinfo.php?&language=it&fname='+ this.searchProxy.name + '&num=15&offset=' + this.page
+      if (this.searchProxy.type != '')
+      {
+        url += '&type=' + this.searchProxy.type 
+      }
       axios.get(url)
             .then((response) => {
                 for (let newCard of response.data.data) {
@@ -36,7 +40,14 @@ export default {
     }
   },
     created() {
-            
+      let url = 'https://db.ygoprodeck.com/api/v7/cardinfo.php?&language=it&num=15&offset=0'
+      console.log(url)
+      axios.get(url)
+            .then((response) => {
+                for (let newCard of response.data.data) {
+                    this.cardsArray.push(newCard)
+                }
+            })
     }
 }
 </script>

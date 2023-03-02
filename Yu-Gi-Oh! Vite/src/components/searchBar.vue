@@ -3,15 +3,18 @@ export default {
   data() {
     return {
       name: '',
+      type: '',
+      typeIndex: 4,
     }
   },
     methods: {
-        search() {
-            console.log('ciao')
-        },
         handleChange (event) {
-              this.$emit("request", event.target.value)
-          }
+            let newResearch = {
+                name: this.name,
+                type: this.type
+            }
+              this.$emit("request", newResearch)
+          },
     }
 }
 </script>
@@ -20,13 +23,13 @@ export default {
     <div class="searchBar">
         <input type="text" name="" id="" v-model="name" @input="handleChange">
     <ul>
-        <li>
+        <li id="monster" @click="type = 'Normal Monster', handleChange(), typeIndex = 0" :class="{active : (typeIndex == 0)}">
             Monster
         </li>
-        <li>
+        <li id="spell" @click="type = 'Spell Card', handleChange(), typeIndex = 1" :class="{active : (typeIndex == 1)}">
             Spell
         </li>
-        <li>
+        <li id="trap" @click="type = 'Trap Card', handleChange(), typeIndex = 2" :class="{active : (typeIndex == 2)}">
             Trap
         </li>
     </ul>
@@ -52,6 +55,15 @@ export default {
             border: 1px solid black;
             border-left: none;
             padding: 1rem;
+            &#monster.active {
+                background-color: #fde68a88;
+            }
+            &#spell.active {
+                background-color: #1d9e737f;
+            }
+            &#trap.active {
+                background-color: #bc5a8480;
+            }
         }
         li:last-of-type {
             border-radius: 0 10px 10px 0;
