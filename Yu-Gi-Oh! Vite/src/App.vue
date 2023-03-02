@@ -12,6 +12,9 @@ export default {
   <cardContainer />
 </template>
 
-<style scoped>
-
+<style>
+  html, body {
+    background-color: beige;
+    font-family: 'Overpass', sans-serif;
+  }
 </style>

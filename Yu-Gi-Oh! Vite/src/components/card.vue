@@ -26,10 +26,10 @@ export default {
         this.desc = card.desc
         this.img = card.card_images[0].image_url_cropped
         this.attribute = card.attribute
+        this.race = card.race
         if (card.type.includes('Monster')) {
           this.color = 'monster'
           this.level = card.level
-          this.race = card.race
           this.type = card.type.replace('Monster', '').replace('Normal', '')
           this.values = this.type.split(' ')
           this.values.unshift(this.race)
@@ -62,10 +62,11 @@ export default {
         {{ name }}
       </div>
       <div class="stats">
-        <img :src="'src/img/attributeIcons/'+ attribute +'.png'" alt="">
+        <img v-if="(attribute != 'Spell') && (attribute != 'Trap')" :src="'src/img/attributeIcons/' + attribute + '.png'" alt="">
+        <img v-else-if="attribute == 'Spell'" :src="'src/img/attributeIcons/' + race + '.png'">
         {{ attribute }}
-        <img src="src/img/attributeIcons/star.png" alt="">
-        <span> LEVEL {{ level }}</span>
+        <img v-if="(attribute != 'Spell') && (attribute != 'Trap')" src="src/img/attributeIcons/star.png" alt="">
+        <span v-if="(attribute != 'Spell') && (attribute != 'Trap')" > LEVEL {{ level }}</span>
         <span v-if="(attribute != 'Spell') && (attribute != 'Trap')">[ 
             <span v-for="(value, index) in values">
               {{ value }} 
@@ -87,21 +88,18 @@ export default {
 <style lang="scss" scoped>
 .card {
   display: flex;
-  border-radius: 10px;
+  box-sizing: border-box;
   &.monster {
-    background-color: rgba($color: #FDE68A, $alpha: .6);
-    border: 2px solid white;
-    outline: 5px solid #FDE68A;
+    background: linear-gradient(to bottom left, white, white, rgba($color: #FDE68A, $alpha: .8));
+    border-bottom: 5px solid #FDE68A;
   }
   &.spell {
-    background-color: rgba($color: #1D9E74, $alpha: .6);
-    border: 2px solid white;
-    outline: 5px solid #1D9E74;
+    background: linear-gradient(to bottom left, white, white, rgba($color: #1D9E74, $alpha: .8));
+    border-bottom: 5px solid #1D9E74;
   }
   &.trap {
-    background-color: rgba($color: #BC5A84, $alpha: .6);
-    border: 2px solid white;
-    outline: 5px solid #BC5A84;
+    background: linear-gradient(to bottom left, white, white, rgba($color: #BC5A84, $alpha: .8));
+    border-bottom: 5px solid #BC5A84;
   }
   .cardImg {
     height: 11.8rem;
@@ -125,7 +123,10 @@ export default {
       font-weight: 600;
       text-transform: uppercase;
     }
-
+    .name {
+      font-size: 1.3rem;
+    }
+    
     .stats {
       display: flex;
       gap: .6rem;
