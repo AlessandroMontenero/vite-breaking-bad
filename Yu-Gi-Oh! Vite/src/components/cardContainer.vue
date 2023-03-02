@@ -1,24 +1,37 @@
 
 <script>
 import axios from 'axios'
+import { toRaw } from 'vue'
 import card from './card.vue'
 export default {
     data() {
         return{
-            newCard: [],
             cardsArray: [],
+            page: 0,
+            name: ''
         }
     },
     components: {
         card
     },
     created() {
-        for (let i = 0; i<20; i++){
-            let arrayPosition = 0
-            axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?&language=it&num=1&offset=' + i)
+            axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?&language=it&num=15&offset=' + this.page)
             .then((response) => {
-                this.newCard = response.data.data[0]
-                this.cardsArray.push(this.newCard)
+                for (let newCard of response.data.data) {
+                    console.log(response.data)
+                    this.cardsArray.push(newCard)
+                }
+            })
+    },
+    methods: {
+        search() {
+            this.cardsArray = []
+            axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=' + this.name + '&language=it&num=15&offset=' + this.page)
+            .then((response) => {
+                for (let newCard of response.data.data) {
+                    console.log(response.data.meta)
+                    this.cardsArray.push(newCard)
+                }
             })
         }
     }
@@ -28,21 +41,44 @@ export default {
 </script>
 
 <template>
-    <div class="container">
-        <div v-for="card in cardsArray">
-            <card :data="card"/>
+    <main>
+        <div class="container">
+            <input type="text" name="" id="" v-model="name" v-on:change="search()">
+            <button @click="search()"></button></div>
+        <div class="container">
+            
+            <div v-for="card in cardsArray">
+                <card :data="card"/>
+            </div>
         </div>
-    </div>
+    </main>
 </template>
 
 <style lang="scss" scoped>
-    .container {
-        width: 60%;
-        margin: 5rem auto;
-        display: flex;
-        flex-direction: column;
-        background-color: white;
-        padding: 2rem;
-        border: 4px solid #c8cbb0;
-    }
+main {
+    padding: 3rem;
+    width: 65vw;
+    margin: auto;
+    margin-top: 5%;
+    height: 80vh;
+    overflow-y: auto;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    left: 50px;
+    position: fixed;
+}
+::-webkit-scrollbar-track {
+    background: none;
+    
+}
+::-webkit-scrollbar-thumb {
+    background: #FDE68A;
+    border-radius: 50px;
+  }
 </style>
