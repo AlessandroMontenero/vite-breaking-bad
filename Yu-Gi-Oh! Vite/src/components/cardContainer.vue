@@ -1,39 +1,17 @@
 
 <script>
-import axios from 'axios'
 import { toRaw } from 'vue'
 import card from './card.vue'
 export default {
+    props: {
+        cards: Array
+    },
     data() {
         return{
-            cardsArray: [],
-            page: 0,
-            name: ''
         }
     },
     components: {
         card
-    },
-    created() {
-            axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?&language=it&num=15&offset=' + this.page)
-            .then((response) => {
-                for (let newCard of response.data.data) {
-                    console.log(response.data)
-                    this.cardsArray.push(newCard)
-                }
-            })
-    },
-    methods: {
-        search() {
-            this.cardsArray = []
-            axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=' + this.name + '&language=it&num=15&offset=' + this.page)
-            .then((response) => {
-                for (let newCard of response.data.data) {
-                    console.log(response.data.meta)
-                    this.cardsArray.push(newCard)
-                }
-            })
-        }
     }
 
 }
@@ -43,11 +21,7 @@ export default {
 <template>
     <main>
         <div class="container">
-            <input type="text" name="" id="" v-model="name" v-on:change="search()">
-            <button @click="search()"></button></div>
-        <div class="container">
-            
-            <div v-for="card in cardsArray">
+            <div v-for="card in cards">
                 <card :data="card"/>
             </div>
         </div>
@@ -56,11 +30,8 @@ export default {
 
 <style lang="scss" scoped>
 main {
-    padding: 3rem;
     width: 65vw;
     margin: auto;
-    margin-top: 5%;
-    height: 80vh;
     overflow-y: auto;
     background-color: white;
     display: flex;
